@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import javax.imageio.ImageIO;
 
@@ -43,33 +46,33 @@ public class DLLTest {
 	 *  
 	 */
 	public interface CLibrary extends Library {
+		
 		boolean setSubjectImage(byte[] p, int height, int width);
+		boolean setSubjectFromString(String s);
 		boolean checkSubject();
 		boolean setDetector(int type); //if not called Default is BRISK
 		boolean setMatcher(int type); //if not called Default is BRUTE FORCE W/HAMMING
 		boolean setSubjectKeypoints();
 		boolean compareToSubject(byte[] p, int h1, int w1);
-		Pointer getSubjectDescriptors();
-		void printSubjectDescriptors();
-		void printDesc();
-		String getString();
+		String getSubjectDescriptors();
+		String getDesc();
 		void cleanUp();
 	}
 	
 	public DLLTest(){		
 		Native.setProtected(true);
 		//remember you added the external folder location in Build Path -> Library -> Add External Folder
-		cl = (CLibrary) Native.loadLibrary("OpenCV3_3_DLL", CLibrary.class);
+		cl = (CLibrary) Native.loadLibrary("OpenCV3_3DLL", CLibrary.class);
 
 		cl.setDetector(2);
 		cl.setMatcher(0);			
 	}
 	
 	public void run(){
-       // String searchObject = "C:\\Users\\Miguel Gallegos\\Documents\\TestImages\\bottle1_doubled.jpg";
-       // String searchScene = "C:\\Users\\Miguel Gallegos\\Documents\\TestImages\\bottles_doubled.jpg";
-       String searchObject = "C:\\Users\\299490\\Desktop\\Alexie\\Subject.jpg";
-       String searchScene = "C:\\Users\\299490\\Desktop\\Alexie\\Scene.jpg";
+       String searchObject = "C:\\Users\\Miguel\\Desktop\\Alexie\\Subject.jpg";
+       String searchScene = "C:\\Users\\Miguel\\Desktop\\Alexie\\Scene.jpg";
+       //String searchObject = "C:\\Users\\299490\\Desktop\\Alexie\\Subject.jpg";
+       //String searchScene = "C:\\Users\\299490\\Desktop\\Alexie\\Scene.jpg";
 			
         try {
         	
@@ -108,14 +111,12 @@ public class DLLTest {
 			} else {
 				return;
 			}
-			cl.printDesc();
-			//cl.printSubjectDescriptors();
-			//System.out.println(cl.getSubjectDescriptors());
-			//System.out.println(new String(cl.getSubjectDescriptors().getString(0)));
+
+			cl.setSubjectFromString("yo mammy");
+			//String s = cl.getSubjectDescriptors();
+			//
+			//Files.write(Paths.get("C:\\output\\java_out.txt"), s.getBytes(), StandardOpenOption.CREATE);
 			
-			//Pointer bDescriptors = cl.getSubjectDescriptors();
-			//System.out.println("subject descriptors from Java");
-			//System.out.println(bDescriptors.toString());
 			/*
 			int h2;
 			int w2;
